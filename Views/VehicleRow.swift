@@ -5,16 +5,12 @@ struct VehicleRow: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(Color.blue.opacity(0.12))
-                Image(systemName: iconName)
-                    .font(.title3)
-                    .foregroundStyle(.blue)
-            }
-            .frame(width: 44, height: 44)
+            Image(systemName: iconName)
+                .font(.title2)
+                .foregroundStyle(.blue)
+                .frame(width: 32)
 
-            VStack(alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text(vehicle.displayName)
                     .font(.headline)
 
@@ -22,27 +18,18 @@ struct VehicleRow: View {
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
 
-                HStack(spacing: 8) {
-                    Label("\(vehicle.currentMileage) mi", systemImage: "speedometer")
+                if let reminder = nextReminderText {
+                    Label(reminder, systemImage: "bell")
+                        .font(.caption)
+                        .foregroundStyle(.orange)
+                } else {
+                    Text("No reminders set")
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                    if let reminder = nextReminderText {
-                        Label(reminder, systemImage: "bell")
-                            .font(.caption)
-                            .foregroundStyle(.orange)
-                    } else {
-                        Text("No reminders")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
                 }
             }
-            Spacer()
         }
-        .padding(16)
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 4)
+        .padding(.vertical, 4)
     }
 
     private var iconName: String {
