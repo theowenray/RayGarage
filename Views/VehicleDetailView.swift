@@ -86,11 +86,7 @@ private struct ServiceRecordRow: View {
             HStack(spacing: 12) {
                 Label("\(record.mileage) mi", systemImage: "speedometer")
                 if let cost = record.cost {
-                    Label {
-                        Text(cost, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
-                    } icon: {
-                        Image(systemName: "dollarsign.circle")
-                    }
+                    Label(cost, systemImage: "dollarsign.circle")
                 }
             }
             .font(.caption)
