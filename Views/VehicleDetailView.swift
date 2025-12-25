@@ -36,13 +36,72 @@ struct VehicleDetailView: View {
                 }
             }
 
+            Section("Tire Information") {
+                if let tireInfo = currentVehicle.tireInfo {
+                    TireInfoView(vehicleID: currentVehicle.id, tireInfo: tireInfo)
+                } else {
+                    Button("Add Tire Information") {
+                        // Add tire info
+                        var updatedVehicle = currentVehicle
+                        updatedVehicle.tireInfo = TireInfo()
+                        store.updateVehicle(updatedVehicle)
+                    }
+                }
+            }
+            
+            Section("Insurance Information") {
+                if let insuranceInfo = currentVehicle.insuranceInfo {
+                    InsuranceInfoView(vehicleID: currentVehicle.id, insuranceInfo: insuranceInfo)
+                } else {
+                    Button("Add Insurance Information") {
+                        // Add insurance info
+                        var updatedVehicle = currentVehicle
+                        updatedVehicle.insuranceInfo = InsuranceInfo()
+                        store.updateVehicle(updatedVehicle)
+                    }
+                }
+            }
+            
             Section("Service Records") {
                 if currentVehicle.records.isEmpty {
                     Text("No service records yet.")
                         .foregroundStyle(.secondary)
                 } else {
                     ForEach(currentVehicle.records) { record in
-                        ServiceRecordRow(record: record)
+                        NavigationLink {
+                            ServiceRecordDetailView(vehicleID: currentVehicle.id, record: record)
+                        } label: {
+                            ServiceRecordRow(record: record)
+                        }
+                    }
+                }
+            }
+            
+            if let lastOilChange = currentVehicle.lastOilChange {
+                Section("Last Oil Change") {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(lastOilChange.date.formatted(date: .abbreviated, time: .omitted))
+                                .font(.headline)
+                            Text("\(lastOilChange.mileage) miles")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                        if let nextReminder = currentVehicle.nextOilChangeReminder {
+                            VStack(alignment: .trailing, spacing: 4) {
+                                if let reminderDate = nextReminder.reminderDate {
+                                    Text("Next: \(reminderDate.formatted(date: .abbreviated, time: .omitted))")
+                                        .font(.caption)
+                                        .foregroundStyle(.orange)
+                                }
+                                if let reminderMileage = nextReminder.reminderMileage {
+                                    Text("At: \(reminderMileage) miles")
+                                        .font(.caption)
+                                        .foregroundStyle(.orange)
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -86,7 +145,7 @@ private struct ServiceRecordRow: View {
             HStack(spacing: 12) {
                 Label("\(record.mileage) mi", systemImage: "speedometer")
                 if let cost = record.cost {
-                    Label(cost, systemImage: "dollarsign.circle")
+                    Label(String(format: "$%.2f", cost), systemImage: "dollarsign.circle")
                 }
             }
             .font(.caption)
@@ -98,10 +157,14 @@ private struct ServiceRecordRow: View {
                     .foregroundStyle(.orange)
             }
 
-            if let attachment = record.attachmentName {
-                Label(attachment, systemImage: "doc.text")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+            if record.receiptImageData != nil {
+                HStack {
+                    Image(systemName: "doc.text.fill")
+                        .foregroundStyle(.green)
+                    Text(record.receiptFileName ?? "Receipt")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
             }
 
             if !record.notes.isEmpty {

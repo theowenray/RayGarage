@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSCameraUsageDescription</key>
+	<string>RayGarage needs access to your camera to scan receipts for service records.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>RayGarage needs access to your photo library to add receipt images to service records.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>RayGarage needs access to save receipt images to your photo library.</string>
+</dict>
+</plist>
+

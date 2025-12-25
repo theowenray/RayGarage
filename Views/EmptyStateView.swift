@@ -5,12 +5,28 @@ struct EmptyStateView: View {
     let message: String
 
     var body: some View {
-        ContentUnavailableView {
-            Label(title, systemImage: "clipboard")
-        } description: {
-            Text(message)
+        VStack(spacing: 20) {
+            Spacer()
+            
+            Image(systemName: "car.2.fill")
+                .font(.system(size: 80))
+                .foregroundStyle(.blue.opacity(0.6))
+            
+            VStack(spacing: 8) {
+                Text(title)
+                    .font(.title2)
+                    .bold()
+                
+                Text(message)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+            }
+            
+            Spacer()
         }
-        .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 

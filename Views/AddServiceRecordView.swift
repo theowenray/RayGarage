@@ -16,7 +16,9 @@ struct AddServiceRecordView: View {
     @State private var reminderDate = Date()
     @State private var addReminderMileage = false
     @State private var reminderMileageText = ""
-    @State private var attachmentName: String?
+    @State private var receiptImageData: Data?
+    @State private var receiptFileName: String?
+    @State private var showingReceiptScanner = false
 
     var body: some View {
         NavigationStack {
@@ -47,12 +49,30 @@ struct AddServiceRecordView: View {
                     }
                 }
 
-                Section("Attachments") {
-                    if let attachmentName {
-                        Label(attachmentName, systemImage: "doc.text")
+                Section("Receipt") {
+                    if receiptImageData != nil {
+                        HStack {
+                            Image(systemName: "doc.text.fill")
+                                .foregroundStyle(.green)
+                            if let fileName = receiptFileName {
+                                Text(fileName)
+                                    .font(.subheadline)
+                            } else {
+                                Text("Receipt attached")
+                                    .font(.subheadline)
+                            }
+                            Spacer()
+                            Button("Remove") {
+                                receiptImageData = nil
+                                receiptFileName = nil
+                            }
+                            .foregroundStyle(.red)
+                        }
                     }
-                    Button("Scan Service Record") {
-                        attachmentName = "Scanned service record"
+                    Button {
+                        showingReceiptScanner = true
+                    } label: {
+                        Label("Scan or Add Receipt", systemImage: "camera.fill")
                     }
                     .buttonStyle(.bordered)
                 }
@@ -82,12 +102,27 @@ struct AddServiceRecordView: View {
                             notes: notes,
                             reminderDate: addReminderDate ? reminderDate : nil,
                             reminderMileage: reminderMileage,
-                            attachmentName: attachmentName
+                            receiptImageData: receiptImageData,
+                            receiptFileName: receiptFileName
                         )
                         store.addRecord(record, to: vehicleID)
                         dismiss()
                     }
                     .disabled(title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                }
+            }
+            .sheet(isPresented: $showingReceiptScanner) {
+                NavigationStack {
+                    ReceiptScannerView(receiptImageData: $receiptImageData, receiptFileName: $receiptFileName)
+                        .navigationTitle("Add Receipt")
+                        .navigationBarTitleDisplayMode(.inline)
+                        .toolbar {
+                            ToolbarItem(placement: .cancellationAction) {
+                                Button("Done") {
+                                    showingReceiptScanner = false
+                                }
+                            }
+                        }
                 }
             }
         }

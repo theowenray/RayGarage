@@ -1,6 +1,6 @@
 import Foundation
 
-enum ServiceCategory: String, CaseIterable, Identifiable {
+enum ServiceCategory: String, CaseIterable, Identifiable, Codable {
     case oilChange = "Oil Change"
     case inspection = "Inspection"
     case repair = "Repair"
@@ -12,7 +12,7 @@ enum ServiceCategory: String, CaseIterable, Identifiable {
     var id: String { rawValue }
 }
 
-struct ServiceRecord: Identifiable {
+struct ServiceRecord: Identifiable, Codable, Hashable {
     let id: UUID
     var title: String
     var category: ServiceCategory
@@ -22,7 +22,8 @@ struct ServiceRecord: Identifiable {
     var notes: String
     var reminderDate: Date?
     var reminderMileage: Int?
-    var attachmentName: String?
+    var receiptImageData: Data?
+    var receiptFileName: String?
 
     init(
         id: UUID = UUID(),
@@ -34,7 +35,8 @@ struct ServiceRecord: Identifiable {
         notes: String = "",
         reminderDate: Date? = nil,
         reminderMileage: Int? = nil,
-        attachmentName: String? = nil
+        receiptImageData: Data? = nil,
+        receiptFileName: String? = nil
     ) {
         self.id = id
         self.title = title
@@ -45,6 +47,7 @@ struct ServiceRecord: Identifiable {
         self.notes = notes
         self.reminderDate = reminderDate
         self.reminderMileage = reminderMileage
-        self.attachmentName = attachmentName
+        self.receiptImageData = receiptImageData
+        self.receiptFileName = receiptFileName
     }
 }
