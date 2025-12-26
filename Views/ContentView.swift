@@ -19,11 +19,12 @@ struct ContentView: View {
                                 VehicleRow(vehicle: vehicle)
                             }
                         }
+                        .onDelete(perform: deleteVehicles)
                     }
                     .listStyle(.insetGrouped)
                 }
             }
-            .navigationTitle("RayGarage")
+            .navigationTitle("My Garage")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
@@ -40,6 +41,12 @@ struct ContentView: View {
             .sheet(isPresented: $showingAddVehicle) {
                 AddVehicleView()
             }
+        }
+    }
+    
+    private func deleteVehicles(at offsets: IndexSet) {
+        for index in offsets {
+            store.deleteVehicle(store.vehicles[index])
         }
     }
 }

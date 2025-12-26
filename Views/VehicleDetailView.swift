@@ -1,8 +1,11 @@
 import SwiftUI
+import UIKit
 
 struct VehicleDetailView: View {
     @EnvironmentObject private var store: GarageStore
+    @Environment(\.dismiss) private var dismiss
     @State private var showingAddRecord = false
+    @State private var showingEditVehicle = false
 
     let vehicle: Vehicle
 
@@ -11,11 +14,42 @@ struct VehicleDetailView: View {
 
         List {
             Section {
+                // Vehicle Photo
+                if let photoData = currentVehicle.photoImageData,
+                   let uiImage = UIImage(data: photoData) {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(height: 200)
+                        .frame(maxWidth: .infinity)
+                        .clipped()
+                        .cornerRadius(12)
+                        .padding(.vertical, 8)
+                } else {
+                    Button {
+                        showingEditVehicle = true
+                    } label: {
+                        VStack(spacing: 8) {
+                            Image(systemName: "camera.fill")
+                                .font(.system(size: 40))
+                                .foregroundStyle(.blue)
+                            Text("Add Vehicle Photo")
+                                .font(.subheadline)
+                                .foregroundStyle(.blue)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 150)
+                        .background(Color.blue.opacity(0.1))
+                        .cornerRadius(12)
+                    }
+                    .padding(.vertical, 8)
+                }
+                
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(currentVehicle.displayName)
                             .font(.title2)
-                        Text("\(currentVehicle.year) \(currentVehicle.make) \(currentVehicle.model)")
+                        Text("\(String(currentVehicle.year)) \(currentVehicle.make) \(currentVehicle.model)")
                             .foregroundStyle(.secondary)
                     }
                     Spacer()
@@ -107,8 +141,16 @@ struct VehicleDetailView: View {
             }
         }
         .listStyle(.insetGrouped)
-        .navigationTitle("Vehicle")
+        .navigationTitle(currentVehicle.displayName)
         .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    showingEditVehicle = true
+                } label: {
+                    Image(systemName: "pencil")
+                }
+                .accessibilityLabel("Edit vehicle")
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     showingAddRecord = true
@@ -120,6 +162,9 @@ struct VehicleDetailView: View {
         }
         .sheet(isPresented: $showingAddRecord) {
             AddServiceRecordView(vehicleID: currentVehicle.id)
+        }
+        .sheet(isPresented: $showingEditVehicle) {
+            EditVehicleView(vehicle: currentVehicle)
         }
     }
 }

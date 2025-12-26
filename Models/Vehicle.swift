@@ -2,6 +2,7 @@ import Foundation
 
 enum VehicleType: String, CaseIterable, Identifiable, Codable {
     case car = "Car"
+    case truck = "Truck"
     case boat = "Boat"
     case motorcycle = "Motorcycle"
     case other = "Other"
@@ -75,6 +76,7 @@ struct Vehicle: Identifiable, Codable, Hashable {
     var records: [ServiceRecord]
     var tireInfo: TireInfo?
     var insuranceInfo: InsuranceInfo?
+    var photoImageData: Data?
 
     init(
         id: UUID = UUID(),
@@ -87,7 +89,8 @@ struct Vehicle: Identifiable, Codable, Hashable {
         notes: String = "",
         records: [ServiceRecord] = [],
         tireInfo: TireInfo? = nil,
-        insuranceInfo: InsuranceInfo? = nil
+        insuranceInfo: InsuranceInfo? = nil,
+        photoImageData: Data? = nil
     ) {
         self.id = id
         self.name = name
@@ -100,11 +103,12 @@ struct Vehicle: Identifiable, Codable, Hashable {
         self.records = records
         self.tireInfo = tireInfo
         self.insuranceInfo = insuranceInfo
+        self.photoImageData = photoImageData
     }
 
     var displayName: String {
         if name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            return "\(year) \(make) \(model)"
+            return "\(String(year)) \(make) \(model)"
         }
         return name
     }

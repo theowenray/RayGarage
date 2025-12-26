@@ -14,7 +14,7 @@ struct VehicleRow: View {
                 Text(vehicle.displayName)
                     .font(.headline)
 
-                Text("\(vehicle.year) \(vehicle.make) \(vehicle.model)")
+                Text("\(String(vehicle.year)) \(vehicle.make) \(vehicle.model)")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
 
@@ -36,6 +36,8 @@ struct VehicleRow: View {
         switch vehicle.type {
         case .car:
             return "car.fill"
+        case .truck:
+            return "truck.box.fill"
         case .boat:
             return "sailboat.fill"
         case .motorcycle:

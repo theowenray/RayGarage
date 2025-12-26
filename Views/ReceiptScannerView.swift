@@ -71,8 +71,7 @@ struct ReceiptScannerView: View {
         .onChange(of: selectedItem) {
             Task {
                 guard let newItem = selectedItem else { return }
-                if let data = try? await newItem.loadTransferable(type: Data.self),
-                   let uiImage = UIImage(data: data) {
+                if let data = try? await newItem.loadTransferable(type: Data.self) {
                     receiptImageData = data
                     receiptFileName = "Receipt_\(Date().formatted(date: .numeric, time: .omitted)).jpg"
                 }

@@ -39,11 +39,9 @@ struct TireInfoView: View {
                         .foregroundStyle(.secondary)
                     Text("\(installedMileage) miles")
                 }
-            }
-            
-            if let expectedLife = tireInfo.expectedLifeMiles,
-               let installedMileage = tireInfo.installedMileage {
-                if let vehicle = store.vehicles.first(where: { $0.id == vehicleID }) {
+                
+                if let expectedLife = tireInfo.expectedLifeMiles,
+                   let vehicle = store.vehicles.first(where: { $0.id == vehicleID }) {
                     let milesUsed = max(0, vehicle.currentMileage - installedMileage)
                     let milesRemaining = max(0, expectedLife - milesUsed)
                     let percentage = expectedLife > 0 ? Double(milesRemaining) / Double(expectedLife) * 100 : 0
